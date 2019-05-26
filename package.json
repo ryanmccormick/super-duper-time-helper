@@ -6,12 +6,26 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "format": "prettier --write \"lib/**/*.ts\" \"lib/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
     "test": "jest",
     "test:watch": "jest --watch",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\""
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A lib",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanmccormick/super-duper-time-helper.git"
   },
   "author": "Ryan McCormick",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ryanmccormick/super-duper-time-helper/issues"
+  },
+  "homepage": "https://github.com/ryanmccormick/super-duper-time-helper#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-transform-typescript": "^7.4.5",
@@ -26,6 +40,7 @@
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.1",
     "tslint": "^5.16.0",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.4.5",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"

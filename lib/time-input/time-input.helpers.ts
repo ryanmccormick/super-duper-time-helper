@@ -4,10 +4,9 @@ import { NumberRangeItem } from '../models/number-range-item.model';
 import { TimeBlock } from '../models/time-block.model';
 import { TimeBlockCalc } from '../models/time-block-calc.model';
 
-
 export function timeWorkedDisplay(timeBlockCalc: TimeBlockCalc): string {
   try {
-    const {hours, minutes} = timeBlockCalc;
+    const { hours, minutes } = timeBlockCalc;
     const hourDisplay = hours > 0 ? `${hours}h` : '';
     const minuteDisplay = minutes > 0 ? `${minutes}m` : '';
     return [hourDisplay, minuteDisplay].join(' ').trim();
@@ -18,7 +17,7 @@ export function timeWorkedDisplay(timeBlockCalc: TimeBlockCalc): string {
 
 export function calcTimeWorked(timeBlock: TimeBlock): TimeBlockCalc | null {
   try {
-    const {inTime, outTime} = timeBlock;
+    const { inTime, outTime } = timeBlock;
 
     if (!!inTime && !!outTime) {
       const timeInMs = inTime.getTime();
@@ -32,11 +31,11 @@ export function calcTimeWorked(timeBlock: TimeBlock): TimeBlockCalc | null {
       const x = timeOutMs - timeInMs;
       const y = 60 * 60 * 1000;
       const h = Math.floor(x / y);
-      const m = (x - (h * y)) / (y / 60);
+      const m = (x - h * y) / (y / 60);
 
       return {
         hours: h,
-        minutes: m
+        minutes: m,
       };
     } else {
       return null;
@@ -46,36 +45,35 @@ export function calcTimeWorked(timeBlock: TimeBlock): TimeBlockCalc | null {
   }
 }
 
-
 export function formatEntriesForSave(value: Array<TimeBlock> = []): Array<TimeBlock> {
-  return value.filter((item: TimeBlock) => {
-    try {
-      const {inTime, outTime} = item;
-      return !(inTime === null && outTime === null);
-    } catch (exception) {
-      return false;
-    }
-  }).sort((a: TimeBlock, b: TimeBlock) => {
-    try {
-      const timeStart = a.inTime!.getTime();
-      const timeEnd = b.inTime!.getTime();
-
-      if (timeStart < timeEnd) {
-        return -1;
+  return value
+    .filter((item: TimeBlock) => {
+      try {
+        const { inTime, outTime } = item;
+        return !(inTime === null && outTime === null);
+      } catch (exception) {
+        return false;
       }
+    })
+    .sort((a: TimeBlock, b: TimeBlock) => {
+      try {
+        const timeStart = a.inTime!.getTime();
+        const timeEnd = b.inTime!.getTime();
 
-      if (timeStart > timeEnd) {
-        return 1;
+        if (timeStart < timeEnd) {
+          return -1;
+        }
+
+        if (timeStart > timeEnd) {
+          return 1;
+        }
+
+        return 0;
+      } catch (exception) {
+        return 0;
       }
-
-      return 0;
-    } catch (exception) {
-      return 0;
-    }
-  });
+    });
 }
-
-
 
 /**
  * Adds an empty TimeBlock object to the end of a list when the list is either
@@ -90,42 +88,44 @@ export function editableTimeBlockList(value: Array<TimeBlock> = []): Array<TimeB
     const _value = [...value];
 
     const lastItem = _value[_value.length - 1];
-    const {inTime, outTime} = lastItem;
+    const { inTime, outTime } = lastItem;
 
     if (inTime instanceof Date || outTime instanceof Date) {
-      return _value.concat([{inTime: null, outTime: null}]);
+      return _value.concat([{ inTime: null, outTime: null }]);
     } else {
       return _value;
     }
   } else {
-    return [{inTime: null, outTime: null}];
+    return [{ inTime: null, outTime: null }];
   }
 }
 
 export function findOverlappingRangesByIndex(value: Array<NumberRangeItem>): Array<number> {
-  return value.reduce((acc: Array<number>, curr: NumberRangeItem, index: number, array: Array<NumberRangeItem>) => {
-    array.forEach((item: NumberRangeItem) => {
-      const testItemIndex = curr.index,
-        testItemBegin = curr.begin;
+  return value
+    .reduce((acc: Array<number>, curr: NumberRangeItem, index: number, array: Array<NumberRangeItem>) => {
+      array.forEach((item: NumberRangeItem) => {
+        const testItemIndex = curr.index,
+          testItemBegin = curr.begin;
 
-      if (testItemBegin >= item.begin && testItemBegin <= item.end && testItemIndex !== item.index) {
-        if (acc.indexOf(testItemIndex) === -1) {
-          acc.push(testItemIndex);
+        if (testItemBegin >= item.begin && testItemBegin <= item.end && testItemIndex !== item.index) {
+          if (acc.indexOf(testItemIndex) === -1) {
+            acc.push(testItemIndex);
+          }
+
+          if (acc.indexOf(item.index) === -1) {
+            acc.push(item.index);
+          }
         }
+      });
 
-        if (acc.indexOf(item.index) === -1) {
-          acc.push(item.index);
-        }
-      }
-    });
-
-    return acc;
-  }, []).sort();
+      return acc;
+    }, [])
+    .sort();
 }
 
 export function timeBlockToNumberRangeItem(value: TimeBlock): NumberRangeItem | null {
   if (!!value) {
-    const {inTime, outTime} = value;
+    const { inTime, outTime } = value;
     const numberRangeItem = new NumberRangeItem();
     numberRangeItem.begin = inTime!.getTime();
     numberRangeItem.end = outTime!.getTime();
@@ -165,7 +165,7 @@ export function convertDateToTimeString(value: Date): string {
 export function parse24HourTime(value: string, baseDate: Date): Date {
   const payload = getSanitizedDate(baseDate);
   const parts = parseTwentyFourHourParts(value);
-  const {hour, minute} = parts;
+  const { hour, minute } = parts;
   payload.setHours(hour);
   payload.setMinutes(minute);
   return payload;
@@ -175,7 +175,7 @@ export function parse12HourTime(value: string, baseDate: Date): Date {
   const payload = getSanitizedDate(baseDate);
   const parts = parseTwelveHourParts(value);
   const converted = convertTwelveToTwentyFourHourParts(parts);
-  const {hour, minute} = converted;
+  const { hour, minute } = converted;
   payload.setHours(hour);
   payload.setMinutes(minute);
   return payload;
@@ -202,7 +202,7 @@ export function parseTwentyFourHourParts(value: string): TwentyFourHourParts {
 
 export function convertTwelveToTwentyFourHourParts(value: TwelveHourParts): TwentyFourHourParts {
   const payload = new TwentyFourHourParts();
-  const {hour, minute, isMorning} = value;
+  const { hour, minute, isMorning } = value;
 
   if (isMorning) {
     payload.hour = hour === 12 ? 0 : hour;
@@ -216,7 +216,7 @@ export function convertTwelveToTwentyFourHourParts(value: TwelveHourParts): Twen
 
 export function convertTwentyFourToTwelveHourParts(value: TwentyFourHourParts): TwelveHourParts {
   const payload = new TwelveHourParts();
-  const {hour, minute} = value;
+  const { hour, minute } = value;
 
   if (hour === 0) {
     payload.hour = 12;
@@ -248,7 +248,9 @@ export function checkIs24HourTime(value: string): boolean {
 }
 
 export function checkIs12HourTime(value: string): boolean {
-  const timeTestRegex = new RegExp('^(?:(?:[0])(?:[1-9])|(?:[1])(?:[0-2])|(?:[1-9])):(?:[0-5])(?:[0-9])(?:am|pm|AM|PM)$');
+  const timeTestRegex = new RegExp(
+    '^(?:(?:[0])(?:[1-9])|(?:[1])(?:[0-2])|(?:[1-9])):(?:[0-5])(?:[0-9])(?:am|pm|AM|PM)$',
+  );
   return timeTestRegex.test(value);
 }
 
@@ -257,7 +259,6 @@ export function timeInputIsValid(value: string): boolean {
   const is24HourTime = checkIs24HourTime(value);
   return is12HourTime || is24HourTime;
 }
-
 
 export function getSanitizedDate(start: Date = new Date()): Date {
   const _start = new Date(start);

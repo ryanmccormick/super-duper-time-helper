@@ -5,14 +5,19 @@ import {
   convertDateToTimeString,
   convertDoubleDigitString,
   convertTwelveToTwentyFourHourParts,
-  convertTwentyFourToTwelveHourParts, editableTimeBlockList,
-  findOverlappingRangesByIndex, formatEntriesForSave, getDateFromInput,
+  convertTwentyFourToTwelveHourParts,
+  editableTimeBlockList,
+  findOverlappingRangesByIndex,
+  formatEntriesForSave,
+  getDateFromInput,
   getSanitizedDate,
   parse12HourTime,
   parse24HourTime,
   parseTwelveHourParts,
   parseTwentyFourHourParts,
-  timeBlockToNumberRangeItem, timeInputIsValid, timeWorkedDisplay
+  timeBlockToNumberRangeItem,
+  timeInputIsValid,
+  timeWorkedDisplay,
 } from './time-input.helpers';
 import { TwelveHourParts } from '../models/twelve-hour-parts.model';
 import { TwentyFourHourParts } from '../models/twenty-four-hour-parts.model';
@@ -36,13 +41,13 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should display time based on a TimeBlockCalc object', () => {
-      const input = {hours: 1, minutes: 31};
+      const input = { hours: 1, minutes: 31 };
       const expected = '1h 31m';
       expect(timeWorkedDisplay(input)).toEqual(expected);
     });
 
     it('should only display minutes when hours are zero', () => {
-      const input = {hours: 0, minutes: 31};
+      const input = { hours: 0, minutes: 31 };
       const expected = '31m';
       expect(timeWorkedDisplay(input)).toEqual(expected);
     });
@@ -54,7 +59,7 @@ describe('Time input pure function helpers', () => {
 
     it('should display an empty string when input is junk', () => {
       // @ts-ignore
-      expect(timeWorkedDisplay({inasd: 'asdsdasd'})).toEqual('');
+      expect(timeWorkedDisplay({ inasd: 'asdsdasd' })).toEqual('');
     });
 
     it('should display an empty string when input is undefined', () => {
@@ -71,14 +76,14 @@ describe('Time input pure function helpers', () => {
     it('should calculate the time worked between two date objects', () => {
       const baseDate = getSanitizedDate();
       const timeBlock = new TimeBlock(getDateFromInput('8:00am', baseDate), getDateFromInput('11:31am', baseDate));
-      const expected: TimeBlockCalc = {hours: 3, minutes: 31};
+      const expected: TimeBlockCalc = { hours: 3, minutes: 31 };
       expect(calcTimeWorked(timeBlock)).toEqual(expected);
     });
 
     it('should calculate zero hours and the minutes worked between two date objects', () => {
       const baseDate = getSanitizedDate();
       const timeBlock = new TimeBlock(getDateFromInput('8:00am', baseDate), getDateFromInput('8:31am', baseDate));
-      const expected: TimeBlockCalc = {hours: 0, minutes: 31};
+      const expected: TimeBlockCalc = { hours: 0, minutes: 31 };
       expect(calcTimeWorked(timeBlock)).toEqual(expected);
     });
 
@@ -90,7 +95,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return null when the input is junk', () => {
       // @ts-ignore
-      expect(calcTimeWorked({in: 'aksbjdkabsd'})).toEqual(null);
+      expect(calcTimeWorked({ in: 'aksbjdkabsd' })).toEqual(null);
     });
 
     it('should return null when the input is null', () => {
@@ -112,26 +117,25 @@ describe('Time input pure function helpers', () => {
     it('will remove unnecessary null rows and order by start time', () => {
       const baseDate = getSanitizedDate();
       const input = [
-        {inTime: getDateFromInput('2:30pm', baseDate), outTime: getDateFromInput('5:00pm', baseDate)},
-        {inTime: null, outTime: null},
-        {inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('2:00pm', baseDate)},
-        {inTime: null, outTime: null},
-        {inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate)},
-        {inTime: getDateFromInput('6:00pm', baseDate), outTime: null},
-        {inTime: null, outTime: null},
-        {inTime: null, outTime: null},
-        {inTime: null, outTime: null}
+        { inTime: getDateFromInput('2:30pm', baseDate), outTime: getDateFromInput('5:00pm', baseDate) },
+        { inTime: null, outTime: null },
+        { inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('2:00pm', baseDate) },
+        { inTime: null, outTime: null },
+        { inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate) },
+        { inTime: getDateFromInput('6:00pm', baseDate), outTime: null },
+        { inTime: null, outTime: null },
+        { inTime: null, outTime: null },
+        { inTime: null, outTime: null },
       ];
       const expected = [
-        {inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate)},
-        {inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('2:00pm', baseDate)},
-        {inTime: getDateFromInput('2:30pm', baseDate), outTime: getDateFromInput('5:00pm', baseDate)},
-        {inTime: getDateFromInput('6:00pm', baseDate), outTime: null}
+        { inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate) },
+        { inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('2:00pm', baseDate) },
+        { inTime: getDateFromInput('2:30pm', baseDate), outTime: getDateFromInput('5:00pm', baseDate) },
+        { inTime: getDateFromInput('6:00pm', baseDate), outTime: null },
       ];
       const result = formatEntriesForSave(input);
       expect(result).toEqual(expected);
     });
-
   });
 
   describe('editableTimeBlockList', () => {
@@ -141,7 +145,7 @@ describe('Time input pure function helpers', () => {
 
     it('should add a blank row to an empty list', () => {
       const input: any = [];
-      const expected = [{inTime: null, outTime: null}];
+      const expected = [{ inTime: null, outTime: null }];
       const result = editableTimeBlockList(input);
       expect(result).toEqual(expected);
     });
@@ -149,13 +153,13 @@ describe('Time input pure function helpers', () => {
     it('should add a blank row to a list of items that have a final row that is complete', () => {
       const baseDate = getSanitizedDate();
       const input = [
-        {inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate)},
-        {inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('5:00pm', baseDate)}
+        { inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate) },
+        { inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('5:00pm', baseDate) },
       ];
       const expected = [
-        {inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate)},
-        {inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('5:00pm', baseDate)},
-        {inTime: null, outTime: null}
+        { inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate) },
+        { inTime: getDateFromInput('11:30am', baseDate), outTime: getDateFromInput('5:00pm', baseDate) },
+        { inTime: null, outTime: null },
       ];
       const result = editableTimeBlockList(input);
       expect(result).toEqual(expected);
@@ -164,18 +168,17 @@ describe('Time input pure function helpers', () => {
     it('should not add a blank row to a list of items that have incomplete rows', () => {
       const baseDate = getSanitizedDate();
       const input = [
-        {inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate)},
-        {inTime: getDateFromInput('11:30am', baseDate), outTime: null}
+        { inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate) },
+        { inTime: getDateFromInput('11:30am', baseDate), outTime: null },
       ];
       const expected = [
-        {inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate)},
-        {inTime: getDateFromInput('11:30am', baseDate), outTime: null},
-        {inTime: null, outTime: null}
+        { inTime: getDateFromInput('8:00am', baseDate), outTime: getDateFromInput('11:00am', baseDate) },
+        { inTime: getDateFromInput('11:30am', baseDate), outTime: null },
+        { inTime: null, outTime: null },
       ];
       const result = editableTimeBlockList(input);
       expect(result).toEqual(expected);
     });
-
   });
 
   describe('timeInputIsValid', () => {
@@ -211,7 +214,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return false when input is junk', () => {
       // @ts-ignore
-      expect(timeInputIsValid({time: 'akbhsdkbsd'})).toEqual(false);
+      expect(timeInputIsValid({ time: 'akbhsdkbsd' })).toEqual(false);
     });
 
     it('should return false when input is null', () => {
@@ -232,17 +235,17 @@ describe('Time input pure function helpers', () => {
 
     it('should create a list of range index values that overlap with other values', () => {
       const ranges = [
-        {index: 0, begin: 1, end: 10},
-        {index: 1, begin: 11, end: 15}, // overlapped
-        {index: 2, begin: 14, end: 20}, // overlap
-        {index: 3, begin: 22, end: 30}, // overlapped
-        {index: 4, begin: 31, end: 60}, // overlapped
-        {index: 5, begin: 85, end: 122}, // overlapped
-        {index: 6, begin: 90, end: 160}, // overlap
-        {index: 7, begin: 70, end: 80},
-        {index: 8, begin: 61, end: 65},
-        {index: 9, begin: 23, end: 32}, // overlap two
-        {index: 10, begin: 169, end: 189}
+        { index: 0, begin: 1, end: 10 },
+        { index: 1, begin: 11, end: 15 }, // overlapped
+        { index: 2, begin: 14, end: 20 }, // overlap
+        { index: 3, begin: 22, end: 30 }, // overlapped
+        { index: 4, begin: 31, end: 60 }, // overlapped
+        { index: 5, begin: 85, end: 122 }, // overlapped
+        { index: 6, begin: 90, end: 160 }, // overlap
+        { index: 7, begin: 70, end: 80 },
+        { index: 8, begin: 61, end: 65 },
+        { index: 9, begin: 23, end: 32 }, // overlap two
+        { index: 10, begin: 169, end: 189 },
       ];
 
       const expected = [1, 2, 3, 4, 5, 6, 9];
@@ -271,7 +274,7 @@ describe('Time input pure function helpers', () => {
 
       const result = timeBlockToNumberRangeItem(timeBlock);
       // @ts-ignore
-      const {begin, end} = result;
+      const { begin, end } = result;
       expect(begin).toEqual(1546783200000);
       expect(end).toEqual(1546795800000);
     });
@@ -283,8 +286,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 00:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 0, minute: 0};
-      const expected: TwelveHourParts = {hour: 12, minute: 0, isMorning: true};
+      const input: TwentyFourHourParts = { hour: 0, minute: 0 };
+      const expected: TwelveHourParts = { hour: 12, minute: 0, isMorning: true };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -292,8 +295,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 03:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 3, minute: 0};
-      const expected: TwelveHourParts = {hour: 3, minute: 0, isMorning: true};
+      const input: TwentyFourHourParts = { hour: 3, minute: 0 };
+      const expected: TwelveHourParts = { hour: 3, minute: 0, isMorning: true };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -301,8 +304,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 06:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 6, minute: 0};
-      const expected: TwelveHourParts = {hour: 6, minute: 0, isMorning: true};
+      const input: TwentyFourHourParts = { hour: 6, minute: 0 };
+      const expected: TwelveHourParts = { hour: 6, minute: 0, isMorning: true };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -310,8 +313,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 06:01 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 6, minute: 1};
-      const expected: TwelveHourParts = {hour: 6, minute: 1, isMorning: true};
+      const input: TwentyFourHourParts = { hour: 6, minute: 1 };
+      const expected: TwelveHourParts = { hour: 6, minute: 1, isMorning: true };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -319,8 +322,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 09:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 9, minute: 0};
-      const expected: TwelveHourParts = {hour: 9, minute: 0, isMorning: true};
+      const input: TwentyFourHourParts = { hour: 9, minute: 0 };
+      const expected: TwelveHourParts = { hour: 9, minute: 0, isMorning: true };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -328,8 +331,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 12:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 12, minute: 0};
-      const expected: TwelveHourParts = {hour: 12, minute: 0, isMorning: false};
+      const input: TwentyFourHourParts = { hour: 12, minute: 0 };
+      const expected: TwelveHourParts = { hour: 12, minute: 0, isMorning: false };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -337,8 +340,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 15:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 15, minute: 0};
-      const expected: TwelveHourParts = {hour: 3, minute: 0, isMorning: false};
+      const input: TwentyFourHourParts = { hour: 15, minute: 0 };
+      const expected: TwelveHourParts = { hour: 3, minute: 0, isMorning: false };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -346,8 +349,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 18:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 18, minute: 0};
-      const expected: TwelveHourParts = {hour: 6, minute: 0, isMorning: false};
+      const input: TwentyFourHourParts = { hour: 18, minute: 0 };
+      const expected: TwelveHourParts = { hour: 6, minute: 0, isMorning: false };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -355,8 +358,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 21:00 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 21, minute: 0};
-      const expected: TwelveHourParts = {hour: 9, minute: 0, isMorning: false};
+      const input: TwentyFourHourParts = { hour: 21, minute: 0 };
+      const expected: TwelveHourParts = { hour: 9, minute: 0, isMorning: false };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -364,8 +367,8 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should take twenty four hour parts for 23:59 and return twelve hour equivalent', () => {
-      const input: TwentyFourHourParts = {hour: 23, minute: 59};
-      const expected: TwelveHourParts = {hour: 11, minute: 59, isMorning: false};
+      const input: TwentyFourHourParts = { hour: 23, minute: 59 };
+      const expected: TwelveHourParts = { hour: 11, minute: 59, isMorning: false };
       const result = convertTwentyFourToTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -373,111 +376,110 @@ describe('Time input pure function helpers', () => {
     });
   });
 
-
   describe('convertTwelveToTwentyFourHourParts', () => {
     it('should be defined', () => {
       expect(convertTwelveToTwentyFourHourParts).toBeDefined();
     });
 
     it('should take twelve hour parts for 12:00am and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 12, minute: 0, isMorning: true};
-      const expected: TwentyFourHourParts = {hour: 0, minute: 0};
+      const input: TwelveHourParts = { hour: 12, minute: 0, isMorning: true };
+      const expected: TwentyFourHourParts = { hour: 0, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 12:01am and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 12, minute: 1, isMorning: true};
-      const expected: TwentyFourHourParts = {hour: 0, minute: 1};
+      const input: TwelveHourParts = { hour: 12, minute: 1, isMorning: true };
+      const expected: TwentyFourHourParts = { hour: 0, minute: 1 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 3:00am and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 3, minute: 0, isMorning: true};
-      const expected: TwentyFourHourParts = {hour: 3, minute: 0};
+      const input: TwelveHourParts = { hour: 3, minute: 0, isMorning: true };
+      const expected: TwentyFourHourParts = { hour: 3, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 6:00am and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 6, minute: 0, isMorning: true};
-      const expected: TwentyFourHourParts = {hour: 6, minute: 0};
+      const input: TwelveHourParts = { hour: 6, minute: 0, isMorning: true };
+      const expected: TwentyFourHourParts = { hour: 6, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 6:01am and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 6, minute: 1, isMorning: true};
-      const expected: TwentyFourHourParts = {hour: 6, minute: 1};
+      const input: TwelveHourParts = { hour: 6, minute: 1, isMorning: true };
+      const expected: TwentyFourHourParts = { hour: 6, minute: 1 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 9:00am and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 9, minute: 0, isMorning: true};
-      const expected: TwentyFourHourParts = {hour: 9, minute: 0};
+      const input: TwelveHourParts = { hour: 9, minute: 0, isMorning: true };
+      const expected: TwentyFourHourParts = { hour: 9, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 12:00pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 12, minute: 0, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 12, minute: 0};
+      const input: TwelveHourParts = { hour: 12, minute: 0, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 12, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 12:01pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 12, minute: 1, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 12, minute: 1};
+      const input: TwelveHourParts = { hour: 12, minute: 1, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 12, minute: 1 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 3:00pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 3, minute: 0, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 15, minute: 0};
+      const input: TwelveHourParts = { hour: 3, minute: 0, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 15, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 6:00pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 6, minute: 0, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 18, minute: 0};
+      const input: TwelveHourParts = { hour: 6, minute: 0, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 18, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 9:00pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 9, minute: 0, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 21, minute: 0};
+      const input: TwelveHourParts = { hour: 9, minute: 0, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 21, minute: 0 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 9:01pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 9, minute: 1, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 21, minute: 1};
+      const input: TwelveHourParts = { hour: 9, minute: 1, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 21, minute: 1 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
     });
 
     it('should take twelve hour parts for 11:59pm and return twenty four hour equivalent', () => {
-      const input: TwelveHourParts = {hour: 11, minute: 59, isMorning: false};
-      const expected: TwentyFourHourParts = {hour: 23, minute: 59};
+      const input: TwelveHourParts = { hour: 11, minute: 59, isMorning: false };
+      const expected: TwentyFourHourParts = { hour: 23, minute: 59 };
       const result = convertTwelveToTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -491,7 +493,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 00:00', () => {
       const input = '00:00';
-      const expected: TwentyFourHourParts = {hour: 0, minute: 0};
+      const expected: TwentyFourHourParts = { hour: 0, minute: 0 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -499,7 +501,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 00:01', () => {
       const input = '00:01';
-      const expected: TwentyFourHourParts = {hour: 0, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 0, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -507,7 +509,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 03:01', () => {
       const input = '03:01';
-      const expected: TwentyFourHourParts = {hour: 3, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 3, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -515,7 +517,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 06:01', () => {
       const input = '06:01';
-      const expected: TwentyFourHourParts = {hour: 6, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 6, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -523,7 +525,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 09:01', () => {
       const input = '09:01';
-      const expected: TwentyFourHourParts = {hour: 9, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 9, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -531,7 +533,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 12:01', () => {
       const input = '12:01';
-      const expected: TwentyFourHourParts = {hour: 12, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 12, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -539,7 +541,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 15:01', () => {
       const input = '15:01';
-      const expected: TwentyFourHourParts = {hour: 15, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 15, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -547,7 +549,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 18:00', () => {
       const input = '18:00';
-      const expected: TwentyFourHourParts = {hour: 18, minute: 0};
+      const expected: TwentyFourHourParts = { hour: 18, minute: 0 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -555,7 +557,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 21:01', () => {
       const input = '21:01';
-      const expected: TwentyFourHourParts = {hour: 21, minute: 1};
+      const expected: TwentyFourHourParts = { hour: 21, minute: 1 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -563,7 +565,7 @@ describe('Time input pure function helpers', () => {
 
     it('return time parts for 21:59', () => {
       const input = '21:59';
-      const expected: TwentyFourHourParts = {hour: 21, minute: 59};
+      const expected: TwentyFourHourParts = { hour: 21, minute: 59 };
       const result = parseTwentyFourHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -577,7 +579,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 12:01am', () => {
       const input = '12:01am';
-      const expected: TwelveHourParts = {hour: 12, minute: 1, isMorning: true};
+      const expected: TwelveHourParts = { hour: 12, minute: 1, isMorning: true };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -586,7 +588,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 3:01am', () => {
       const input = '3:01am';
-      const expected: TwelveHourParts = {hour: 3, minute: 1, isMorning: true};
+      const expected: TwelveHourParts = { hour: 3, minute: 1, isMorning: true };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -595,7 +597,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 6:01am', () => {
       const input = '6:01am';
-      const expected: TwelveHourParts = {hour: 6, minute: 1, isMorning: true};
+      const expected: TwelveHourParts = { hour: 6, minute: 1, isMorning: true };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -604,7 +606,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 9:01am', () => {
       const input = '9:01am';
-      const expected: TwelveHourParts = {hour: 9, minute: 1, isMorning: true};
+      const expected: TwelveHourParts = { hour: 9, minute: 1, isMorning: true };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -613,7 +615,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 12:01pm', () => {
       const input = '12:01pm';
-      const expected: TwelveHourParts = {hour: 12, minute: 1, isMorning: false};
+      const expected: TwelveHourParts = { hour: 12, minute: 1, isMorning: false };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -622,7 +624,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 3:00pm', () => {
       const input = '3:00pm';
-      const expected: TwelveHourParts = {hour: 3, minute: 0, isMorning: false};
+      const expected: TwelveHourParts = { hour: 3, minute: 0, isMorning: false };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -631,7 +633,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 6:01pm', () => {
       const input = '6:01pm';
-      const expected: TwelveHourParts = {hour: 6, minute: 1, isMorning: false};
+      const expected: TwelveHourParts = { hour: 6, minute: 1, isMorning: false };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -640,7 +642,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 9:01pm', () => {
       const input = '9:01pm';
-      const expected: TwelveHourParts = {hour: 9, minute: 1, isMorning: false};
+      const expected: TwelveHourParts = { hour: 9, minute: 1, isMorning: false };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -649,7 +651,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return time parts for 11:59pm', () => {
       const input = '11:59pm';
-      const expected: TwelveHourParts = {hour: 11, minute: 59, isMorning: false};
+      const expected: TwelveHourParts = { hour: 11, minute: 59, isMorning: false };
       const result = parseTwelveHourParts(input);
       expect(result.hour).toEqual(expected.hour);
       expect(result.minute).toEqual(expected.minute);
@@ -1105,7 +1107,6 @@ describe('Time input pure function helpers', () => {
   });
 
   describe('convertDateToTimeString', () => {
-
     it('should be defined', () => {
       expect(convertDateToTimeString).toBeDefined();
     });
@@ -1145,7 +1146,7 @@ describe('Time input pure function helpers', () => {
 
     it('will fail gracefully when passed a junk value', () => {
       // @ts-ignore
-      expect(convertDateToTimeString({iam: 'junk'})).toEqual('');
+      expect(convertDateToTimeString({ iam: 'junk' })).toEqual('');
     });
 
     it('will fail gracefully when passed an undefined value', () => {
@@ -1167,7 +1168,6 @@ describe('Time input pure function helpers', () => {
       expect(convertDoubleDigitString(20)).toEqual('20');
     });
   });
-
 
   describe('checkIs24HourTime', () => {
     it('should be defined', () => {
@@ -1227,7 +1227,7 @@ describe('Time input pure function helpers', () => {
 
     it('should return false when provided with a value of the wrong type', () => {
       // @ts-ignore
-      expect(checkIs24HourTime({val: 'aksjdbakjsd'})).toEqual(false);
+      expect(checkIs24HourTime({ val: 'aksjdbakjsd' })).toEqual(false);
     });
 
     it('should return false when provided with a value of null', () => {
@@ -1290,7 +1290,7 @@ describe('Time input pure function helpers', () => {
 
     it('should fail gracefully when supplied with invalid input', () => {
       // @ts-ignore
-      expect(checkIs12HourTime({val: 'sdfdfsdfsdf'})).toEqual(false);
+      expect(checkIs12HourTime({ val: 'sdfdfsdfsdf' })).toEqual(false);
     });
 
     it('should fail gracefully when supplied with null input', () => {
@@ -1308,6 +1308,4 @@ describe('Time input pure function helpers', () => {
       expect(checkIs12HourTime(new RegExp('2334'))).toEqual(false);
     });
   });
-
-
 });
