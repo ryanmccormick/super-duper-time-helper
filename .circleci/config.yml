@@ -2,10 +2,10 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2.1
+version: 2.0
 
-orbs:
-  codecov: codecov/codecov@1.0.4
+#orbs:
+#  codecov: codecov/codecov@1.0.4
 
 defaults: &defaults
   working_directory: ~/repo
@@ -49,8 +49,6 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: coverage
-#      - codecov/upload:
-#          file: coverage
   deploy:
     <<: *defaults
     steps:
@@ -81,14 +79,14 @@ workflows:
     jobs:
       - checkout:
           filters:
-            tags:
-              only: /^v.*/
+            branches:
+              only: /^master.*/
       - test:
           requires:
             - checkout
           filters:
-            tags:
-              only: /^v.*/
+            branches:
+              only: /^master.*/
       - deploy:
           requires:
             - test
