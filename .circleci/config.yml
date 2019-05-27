@@ -45,16 +45,10 @@ jobs:
           at: ~/repo
       - run:
           name: Set registry URL
-          command: npm set registry https://www.npmjs.com/package/super-duper-time-helper
-#     - run:
-#          name: Add user to registry
-#          command: echo "registry = https://registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/repo/.npmrc
-      - run:
-          name: Add user to registry
-          command: echo "email = $NPM_EMAIL" >> ~/repo/.npmrc
+          command: npm set registry https://registry.npmjs.com/
       - run:
           name: Add token
-          command: echo "_auth = $NPM_TOKEN" >> ~/repo/.npmrc
+          command: echo "registry = https://registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/repo/.npmrc
       - run:
           name: Publish package
           command: npm publish
