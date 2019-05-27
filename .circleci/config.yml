@@ -79,14 +79,14 @@ workflows:
     jobs:
       - checkout:
           filters:
-            tags:
-              only: /^v.*/
+            branches:
+              only: /^master.*/
       - test:
           requires:
             - checkout
           filters:
-            tags:
-              only: /^v.*/
+            branches:
+              only: /^master.*/
       - deploy:
           requires:
             - test
