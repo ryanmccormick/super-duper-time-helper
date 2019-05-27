@@ -36,10 +36,14 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: Run tests
+          name: Run JavaScript Tests
           command: npm test
           environment:
             JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
   deploy:
     <<: *defaults
     steps:
