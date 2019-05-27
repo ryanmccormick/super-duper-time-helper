@@ -36,7 +36,7 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: Run JavaScript Tests
+          name: Run JavaScript Tests and Coverage
           command: npm test
           environment:
             JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
@@ -44,6 +44,8 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: reports/junit
+      - store_artifacts:
+          path: coverage
   deploy:
     <<: *defaults
     steps:
