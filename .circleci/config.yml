@@ -39,7 +39,7 @@ jobs:
           name: Run tests
           command: npm test
           environment:
-            JEST_JUNIT_OUTPUT: ~/repo/junit.xml
+            JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
   deploy:
     <<: *defaults
     steps:
