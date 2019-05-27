@@ -40,7 +40,7 @@ jobs:
           at: ~/repo
       - run:
           name: Run JavaScript Tests and Coverage
-          command: npm test
+          command: npm test:ci
           environment:
             JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
       - store_test_results:
@@ -49,8 +49,8 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: coverage
-      - codecov/upload:
-          file: coverage
+#      - codecov/upload:
+#          file: coverage
   deploy:
     <<: *defaults
     steps:
