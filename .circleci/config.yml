@@ -4,9 +4,6 @@
 #
 version: 2.0
 
-#orbs:
-#  codecov: codecov/codecov@1.0.4
-
 defaults: &defaults
   working_directory: ~/repo
   docker:
@@ -63,18 +60,6 @@ jobs:
 
 workflows:
   version: 2
-  pr-test:
-    jobs:
-      - checkout:
-          filters:
-            branches:
-              only: /^pr.*/
-      - test:
-          requires:
-            - checkout
-          filters:
-            branches:
-              only: /^pr.*/
   test-deploy:
     jobs:
       - checkout:
@@ -91,5 +76,7 @@ workflows:
           requires:
             - test
           filters:
+            tags:
+              only: /^v.*/
             branches:
               only: /^master.*/
