@@ -65,6 +65,18 @@ jobs:
 
 workflows:
   version: 2
+  pr-test:
+    jobs:
+      - checkout:
+          filters:
+            branches:
+              only: /^pr.*/
+      - test:
+          requires:
+            - checkout
+          filters:
+            branches:
+              only: /^pr.*/
   test-deploy:
     jobs:
       - checkout:
