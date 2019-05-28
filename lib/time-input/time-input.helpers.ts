@@ -1,6 +1,5 @@
 import { TwelveHourParts, TwentyFourHourParts, NumberRangeItem, TimeBlock, TimeBlockCalc } from '../models';
 
-
 export function twentyFourHourPartsToDate(value: TwentyFourHourParts): Date | null {
   if (!!value) {
     const _date = getSanitizedDate();

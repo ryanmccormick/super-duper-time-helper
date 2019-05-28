@@ -17,7 +17,9 @@ import {
   parseTwentyFourHourParts,
   timeBlockToNumberRangeItem,
   timeInputIsValid,
-  timeWorkedDisplay, twelveHourPartsToDate, twentyFourHourPartsToDate,
+  timeWorkedDisplay,
+  twelveHourPartsToDate,
+  twentyFourHourPartsToDate,
 } from './time-input.helpers';
 import { TwelveHourParts, TwentyFourHourParts, TimeBlock, TimeBlockCalc } from '../models';
 
@@ -38,7 +40,7 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should return a date for the correct input', () => {
-      const parts: TwentyFourHourParts = {hour: 13, minute: 32};
+      const parts: TwentyFourHourParts = { hour: 13, minute: 32 };
       const expected = getSanitizedDate();
       expected.setHours(13);
       expected.setMinutes(32);
@@ -62,7 +64,7 @@ describe('Time input pure function helpers', () => {
     });
 
     it('should convert twelve hour parts to time', () => {
-      const parts: TwelveHourParts = {hour: 1, minute: 0, isMorning: false};
+      const parts: TwelveHourParts = { hour: 1, minute: 0, isMorning: false };
       const expected = getSanitizedDate();
       expected.setHours(13);
       expected.setMinutes(0);
