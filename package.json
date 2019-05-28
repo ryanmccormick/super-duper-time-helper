@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A lib",
-    "postversion": "git push --tags",
+    "postversion": "git push --follow-tags",
     "oldpver": "git push && git push --tags",
     "coverage": "codecov",
     "deploy:release": "npm version patch"
