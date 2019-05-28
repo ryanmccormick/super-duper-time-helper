@@ -17,7 +17,7 @@ import {
   parseTwentyFourHourParts,
   timeBlockToNumberRangeItem,
   timeInputIsValid,
-  timeWorkedDisplay,
+  timeWorkedDisplay, twelveHourPartsToDate, twentyFourHourPartsToDate,
 } from './time-input.helpers';
 import { TwelveHourParts, TwentyFourHourParts, TimeBlock, TimeBlockCalc } from '../models';
 
@@ -30,6 +30,54 @@ describe('Time input pure function helpers', () => {
     dateReference.setMinutes(0);
     dateReference.setSeconds(0);
     dateReference.setMilliseconds(0);
+  });
+
+  describe('twentyFourHourPartsToDate', () => {
+    it('should be defined', () => {
+      expect(twentyFourHourPartsToDate).toBeDefined();
+    });
+
+    it('should return a date for the correct input', () => {
+      const parts: TwentyFourHourParts = {hour: 13, minute: 32};
+      const expected = getSanitizedDate();
+      expected.setHours(13);
+      expected.setMinutes(32);
+      expect(twentyFourHourPartsToDate(parts)).toEqual(expected);
+    });
+
+    it('should return null if input is null', () => {
+      // @ts-ignore
+      expect(twentyFourHourPartsToDate(null)).toEqual(null);
+    });
+
+    it('should return null if input is undefined', () => {
+      // @ts-ignore
+      expect(twentyFourHourPartsToDate()).toEqual(null);
+    });
+  });
+
+  describe('twelveHourPartsToDate', () => {
+    it('should be defined', () => {
+      expect(twelveHourPartsToDate).toBeDefined();
+    });
+
+    it('should convert twelve hour parts to time', () => {
+      const parts: TwelveHourParts = {hour: 1, minute: 0, isMorning: false};
+      const expected = getSanitizedDate();
+      expected.setHours(13);
+      expected.setMinutes(0);
+      expect(twelveHourPartsToDate(parts)).toEqual(expected);
+    });
+
+    it('should return null if input is null', () => {
+      // @ts-ignore
+      expect(twelveHourPartsToDate(null)).toEqual(null);
+    });
+
+    it('should return null if input is undefined', () => {
+      // @ts-ignore
+      expect(twelveHourPartsToDate()).toEqual(null);
+    });
   });
 
   describe('timeWorkedDisplay', () => {

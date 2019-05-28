@@ -1,5 +1,29 @@
 import { TwelveHourParts, TwentyFourHourParts, NumberRangeItem, TimeBlock, TimeBlockCalc } from '../models';
 
+
+export function twentyFourHourPartsToDate(value: TwentyFourHourParts): Date | null {
+  if (!!value) {
+    const _date = getSanitizedDate();
+    _date.setHours(value.hour);
+    _date.setMinutes(value.minute);
+    return _date;
+  } else {
+    return null;
+  }
+}
+
+export function twelveHourPartsToDate(value: TwelveHourParts): Date | null {
+  if (!!value) {
+    const _parts = convertTwelveToTwentyFourHourParts(value);
+    const _date = getSanitizedDate();
+    _date.setHours(_parts.hour);
+    _date.setMinutes(_parts.minute);
+    return _date;
+  } else {
+    return null;
+  }
+}
+
 export function timeWorkedDisplay(timeBlockCalc: TimeBlockCalc): string {
   try {
     const { hours, minutes } = timeBlockCalc;
