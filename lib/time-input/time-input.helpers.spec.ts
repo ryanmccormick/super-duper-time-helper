@@ -19,10 +19,7 @@ import {
   timeInputIsValid,
   timeWorkedDisplay,
 } from './time-input.helpers';
-import { TwelveHourParts } from '../models/twelve-hour-parts.model';
-import { TwentyFourHourParts } from '../models/twenty-four-hour-parts.model';
-import { TimeBlock } from '../models/time-block.model';
-import { TimeBlockCalc } from '../models/time-block-calc.model';
+import { TwelveHourParts, TwentyFourHourParts, NumberRangeItem, TimeBlock, TimeBlockCalc } from '../models';
 
 describe('Time input pure function helpers', () => {
   let dateReference: Date;

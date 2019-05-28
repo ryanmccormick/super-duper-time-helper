@@ -1,8 +1,4 @@
-import { TwelveHourParts } from '../models/twelve-hour-parts.model';
-import { TwentyFourHourParts } from '../models/twenty-four-hour-parts.model';
-import { NumberRangeItem } from '../models/number-range-item.model';
-import { TimeBlock } from '../models/time-block.model';
-import { TimeBlockCalc } from '../models/time-block-calc.model';
+import { TwelveHourParts, TwentyFourHourParts, NumberRangeItem, TimeBlock, TimeBlockCalc } from '../models';
 
 export function timeWorkedDisplay(timeBlockCalc: TimeBlockCalc): string {
   try {
