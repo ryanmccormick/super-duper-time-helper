@@ -64,19 +64,23 @@ workflows:
     jobs:
       - checkout:
           filters:
-            tags:
-              only: /^v.*/
+#            tags:
+#              only: /^v.*/
+            branches:
+              only: /^master.*/
       - test:
           requires:
             - checkout
           filters:
-            tags:
-              only: /^v.*/
+#            tags:
+#              only: /^v.*/
+            branches:
+              only: /^master.*/
       - deploy:
           requires:
             - test
           filters:
-            tags:
-              only: /^v.*/
-#            branches:
-#              only: /^master.*/
+#            tags:
+#              only: /^v.*/
+            branches:
+              only: /^master.*/
