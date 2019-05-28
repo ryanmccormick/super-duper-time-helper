@@ -64,14 +64,14 @@ workflows:
     jobs:
       - checkout:
           filters:
-            branches:
-              only: /^master.*/
+            tags:
+              only: /^v.*/
       - test:
           requires:
             - checkout
           filters:
-            branches:
-              only: /^master.*/
+            tags:
+              only: /^v.*/
       - deploy:
           requires:
             - test
